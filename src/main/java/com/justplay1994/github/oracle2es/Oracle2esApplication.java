@@ -20,7 +20,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication
 @ComponentScan
 @EnableAspectJAutoProxy(exposeProxy = true)
-@MapperScan
+@MapperScan({
+        "com.justplay1994.github.oracle2es.core.dao"
+})
 public class Oracle2esApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Oracle2esApplication.class, args);

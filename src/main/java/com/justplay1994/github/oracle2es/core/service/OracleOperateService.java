@@ -22,37 +22,46 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
+package com.justplay1994.github.oracle2es.core.service;
 
+import com.justplay1994.github.oracle2es.core.service.model.DatabaseModel;
+import com.justplay1994.github.oracle2es.core.service.model.PageModel;
+import com.justplay1994.github.oracle2es.core.service.model.TableModel;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import java.util.HashMap;
+import java.util.List;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.service
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 18:38
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 18:38
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
-@Data
-public class Oracle2esConfig {
+public interface OracleOperateService {
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
+    /**
+     * 获取所有表结构，对于oracle和mysql来说都是一次查表。
+     * oracle 查询sql： SELECT OWNER, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM all_tab_columns
+     * @return
+     */
+    public HashMap<String, TableModel> queryAllTableStructure();
 
 
+    /**
+     * 分页查询表数据
+     * @param tbName
+     * @param pageModel
+     * @return 一页数据
+     */
+    public List<HashMap> queryTableByPage(String tbName, PageModel pageModel);
+
+    /**
+     * 是否需要跳过该表
+     * @return
+     */
+    public boolean isSkip(String tbName);
 }

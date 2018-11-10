@@ -1,50 +1,23 @@
-########################################
-#
-#         db2es相关配置（全局配置）
-#
-#########################################
-db2es.latColumn: WD84
-db2es.lonColumn: JD84
 
-db2es.esUrl: http://10.192.19.161:9200/
-db2es.maxThreadCount: 8
-db2es.indexType: _doc
-db2es.indexDB:
-#每张表的数据缓存队列大小,建议1W，粗略估计1W行生成esBulk为5M,估算空间公式 10条=1KB
-db2es.rowQueueSize: 10000
-#每张表的bulk队列大小,建议100，估算空间公式： esBulkQueueSize * esBulkSize
-db2es.esBulkQueueSize: 100
-#每次请求es的大小，单位M
-db2es.esBulkSize: 5
-#页大小，每次请求数据库的行数,建议1W，粗略估计1W行生成esBulk为5M
-db2es.pageSize: 10000
-#入队，出队阻塞等待时间，单位ms
-db2es.queueWaitTime: 3000
-
-
-########################################
+#################################### 用户配置 开始#################################
 #
-#         oracle2es相关配置
-#
-#########################################
+oracle2es.latColumn: WD84
+oracle2es.lonColumn: JD84
 
-# 由于oracle受限情况下，不能使用all_tables查询tablespace，所以查询不到tablespace，只能讲tablespace用owner替代了
-# owner不能为空
+oracle2es.esUrl: http://10.192.19.161:9200/
+oracle2es.maxThreadCount: 8
+#统一索引类型
+oracle2es.indexType: _doc
+#统一索引DB名称，索引名为:tableName@dbName
+oracle2es.indexDb: zhftyjjcpt
+
 oracle2es.owner: ZHFTYJJCPT
-# tableSpace应该就是DB 重复了
-oracle2es.tableSpace:
-#只读的数据库列表，为空则读全库.eg: dbName
-oracle2es.justReadDB:
-#只读的表的列表，为空则读所有表。eg: dbName.tbName
-#oracle2es.justReadTB: ZHFTYJJCPT.TB_ROAD_DISEASE,ZHFTYJJCPT.HEDAO_001
-#oracle2es.justReadTB: ZHFTYJJCPT.TB_SANXIAO_PLACE,ZHFTYJJCPT.BJ0102,ZHFTYJJCPT.BJ0103,ZHFTYJJCPT.BJ0118,ZHFTYJJCPT.BJ0121,ZHFTYJJCPT.BJ0132,ZHFTYJJCPT.BJ0133,ZHFTYJJCPT.BJ0135,ZHFTYJJCPT.BJ0138,ZHFTYJJCPT.BJ0201,ZHFTYJJCPT.BJ0203,ZHFTYJJCPT.BJ0217,ZHFTYJJCPT.BJ0301,ZHFTYJJCPT.BJ0310,ZHFTYJJCPT.BJ0502,ZHFTYJJCPT.BJ0601,ZHFTYJJCPT.BJ0602,ZHFTYJJCPT.BJ2114,ZHFTYJJCPT.BJ2118,ZHFTYJJCPT.BJ2124,ZHFTYJJCPT.VIDEO_POLICE,ZHFTYJJCPT.EMERGENCY_RESCUE_TEAM,ZHFTYJJCPT.EMERGENCY_HARZARD,ZHFTYJJCPT.EMERGENCY_WAREHOUSE,ZHFTYJJCPT.FUTIAN_PENSION_CENTER,ZHFTYJJCPT.EMERGENCY_SHELTER,ZHFTYJJCPT.TB_XUNCHASHIJIAN,ZHFTYJJCPT.RANQIZHAN_001,ZHFTYJJCPT.TB_XIAOHUOSHUAN_002
-oracle2es.justReadTB:
-#需要跳过的库的列表，为空则不跳过。eg: dbName
-oracle2es.skipReadDB:
-#需要跳过的表的列表，为空则不跳过。eg: dbName.tbName
-oracle2es.skipReadTB: ZHFTYJJCPT.FUTIAN_SCHOOL_2018, ZHFTYJJCPT.XIAOFANG_YINHUAN
-#指定固定的索引名中的库名部分。注意！索引名为（数据库名+表名+主键），如果统一库名，可能存在表冲突的情况。
-oracle2es.indexDB:
+#只读的表的列表，为空则读所有表。配置了只读（justRead）后，跳过（skip）逻辑失效。
+oracle2es.justReadTB: XIAOFANG_YINHUAN,BJ0201,BJ0203
+#需要跳过的库的列表，为空则不跳过。先判断只读，在判断是否跳过。当两个配置冲突时，参考只读，优先级更高。
+oracle2es.skipReadTB: BJ0201
+
+#################################### 用户配置 结束 ##########################################
 
 server:
   port: 8080

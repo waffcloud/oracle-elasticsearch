@@ -22,37 +22,59 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
-
+package com.justplay1994.github.oracle2es.core.thread;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.thread
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 15:51
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 15:51
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
 @Data
-public class Oracle2esConfig {
+public class TestModel implements Runnable{
+    public String name;
+    private int value=100;
+    public ObjectTest objectTest = new ObjectTest("run",100);
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
+    TestModel(){
 
+    }
+
+    TestModel(String name){
+        this.name = name;
+    }
+
+    TestModel(ObjectTest objectTest){
+        this.objectTest = objectTest;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; ++i) {
+            value--;
+            if (objectTest!=null)
+                objectTest.value--;
+            System.out.println(this);
+        }
+    }
+
+//    @Override
+//    public void run() {
+//        for (int i = 0; i < 100; ++i) {
+//            objectTest.value++;
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println(this.toString()+":"+objectTest.toString());
+//        }
+//    }
 
 }

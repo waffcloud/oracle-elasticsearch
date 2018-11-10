@@ -38,17 +38,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/**
- * 工程包名:    com.cetc.cloud.db_statement.provider.config
- * 项目名称:    db-statement
- * 创建描述:    zhangliang 补充
- * Creator:     zhangliang
- * Create_Date: 2017/9/25
- * Updater:     zhangliang
- * Update_Date：2017/10/09
- * 更新描述:    zhangliang 补充
- **/
-
 @EnableWebMvc
 @EnableSwagger2
 @Configuration

@@ -22,37 +22,45 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
+package com.justplay1994.github.oracle2es.framework.controller.model;
 
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+public class HttpResponseModel<T> {
 
-/**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
- * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
- * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
- * @Update_Description: huangzezhou 补充
- **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
-@Data
-public class Oracle2esConfig {
+    private Integer code; //状态码
+    private String message; //描述信息
+    private T   data;      //数据
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
+    public HttpResponseModel(){
+        this.code =SysCode.UNKNOWN_ERROR_CODE;
+        this.message = SysCode.map.get(code);
+        this.data = null;
+    }
 
+
+    public HttpResponseModel(Integer code){
+        this.code = code;
+        this.message = SysCode.map.get(code);
+        this.data = null;
+    }
+
+    public HttpResponseModel(Exception e){
+        this.code =SysCode.UNKNOWN_ERROR_CODE;
+        this.message = SysCode.map.get(code);
+        this.message += e.getMessage();
+        this.data = null;
+    }
+
+    public HttpResponseModel(Integer code, T data){
+        this.code = code;
+        this.message = SysCode.map.get(code);
+        this.data = data;
+    }
+
+    public HttpResponseModel(Integer code, String message, T data){
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
 
 }

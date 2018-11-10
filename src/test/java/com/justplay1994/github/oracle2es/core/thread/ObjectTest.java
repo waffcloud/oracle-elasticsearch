@@ -22,37 +22,27 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
-
+package com.justplay1994.github.oracle2es.core.thread;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.thread
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 16:08
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 16:08
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
 @Data
-public class Oracle2esConfig {
+public class ObjectTest {
+    public String name;
+    public int value;
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
-
-
+    ObjectTest(String name, int value){
+        this.name = name;
+        this.value = value;
+    }
 }

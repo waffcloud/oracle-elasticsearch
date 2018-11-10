@@ -22,37 +22,29 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
+package com.justplay1994.github.oracle2es.core.service.model;
 
-
+import com.justplay1994.github.oracle2es.core.service.model.current.ProcessBar;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.service.model
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 17:25
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 17:25
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
 @Data
-public class Oracle2esConfig {
-
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
-
-
+public class TableModel {
+    private List<ColumnModel> columnModels;   //表结构
+    private LinkedBlockingQueue<List<HashMap>> rows;  //数据队列,每次分页查询的结果入队。
+    private ProcessBar processBar;
 }

@@ -22,37 +22,40 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
-
+package com.justplay1994.github.oracle2es.core.service.model;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.service.model
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 19:05
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 19:05
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
 @Data
-public class Oracle2esConfig {
+public class PageModel {
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
+    private int pageNum;    //页码号,从1开始
+    private int pageSize;   //页大小
 
+    /**
+     * 获取开始下标，从1开始
+     * @return
+     */
+    public int getStartNum(){
+        return (pageNum-1) * pageSize + 1;
+    }
+
+    /**
+     * 获取最后一个数的下标，从1开始
+     * @return
+     */
+    public int getEndNum(){
+        return pageNum * pageSize;
+    }
 
 }

@@ -22,37 +22,37 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
+package com.justplay1994.github.oracle2es.core.aop;
 
-
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.aop
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 17:54
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 17:54
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
 @Component
-@ConfigurationProperties(prefix = "oracle2es")
-@Data
-public class Oracle2esConfig {
+@Aspect
+public class MyAop {
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
+    @Pointcut("execution(* com.justplay1994.github.oracle2es.core.aop.*.*(..))")
+    public void pointCut(){}
 
+    @Before("pointCut()")
+    public void before(JoinPoint joinPoint){
+        System.out.println("before");
+    }
+
+    @AfterReturning(returning = "ret", pointcut = "pointCut()")
+    public void after(Object ret){
+        System.out.println("after");
+    }
 
 }

@@ -22,45 +22,40 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.framework.controller;
+package com.justplay1994.github.oracle2es.core.aop;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class HttpResponseModel<T> {
+/**
+ * @Package: com.justplay1994.github.oracle2es.core.aop
+ * @Project: oracle-elasticsearch
+ * @Creator: huangzezhou
+ * @Create_Date: 2018/11/10 17:52
+ * @Updater: huangzezhou
+ * @Update_Date: 2018/11/10 17:52
+ * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
+ **/
+@Service
+public class SomeOneService {
 
-    private Integer code; //状态码
-    private String message; //描述信息
-    private T   data;      //数据
+    @Autowired
+    SomeOneService someOneService;
 
-    public HttpResponseModel(){
-        this.code =SysCode.UNKNOWN_ERROR_CODE;
-        this.message = SysCode.map.get(code);
-        this.data = null;
+    String str;
+
+    public void print(){
+        someOneService.setStr("123");
+        String str = someOneService.getStr();
+        System.out.println(str);
     }
 
-
-    public HttpResponseModel(Integer code){
-        this.code = code;
-        this.message = SysCode.map.get(code);
-        this.data = null;
+    public String getStr() {
+        return str;
     }
 
-    public HttpResponseModel(Exception e){
-        this.code =SysCode.UNKNOWN_ERROR_CODE;
-        this.message = SysCode.map.get(code);
-        this.message += e.getMessage();
-        this.data = null;
+    public void setStr(String str) {
+        this.str = str;
     }
-
-    public HttpResponseModel(Integer code, T data){
-        this.code = code;
-        this.message = SysCode.map.get(code);
-        this.data = data;
-    }
-
-    public HttpResponseModel(Integer code, String message, T data){
-        this.code = code;
-        this.message = message;
-        this.data = data;
-    }
-
 }

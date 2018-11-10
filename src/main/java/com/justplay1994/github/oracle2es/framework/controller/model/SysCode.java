@@ -1,17 +1,6 @@
-package com.justplay1994.github.oracle2es.framework.controller;
+package com.justplay1994.github.oracle2es.framework.controller.model;
 
 import java.util.HashMap;
-
-/**
- * @Package: com.cetccity.operationcenter.baseframework.http
- * @Project: unified-auth
- * @Description: //TODO
- * @Creator: huangzezhou
- * @Create_Date: 2018/11/2 14:46
- * @Updater: huangzezhou
- * @Update_Date: 2018/11/2 14:46
- * @Update_Description: huangzezhou 补充
- **/
 
 public class SysCode {
 

@@ -22,37 +22,45 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.config;
+package com.justplay1994.github.oracle2es.core.service.impl;
 
+import com.justplay1994.github.oracle2es.core.service.model.DatabaseModel;
+import com.justplay1994.github.oracle2es.core.service.model.TableModel;
+import org.springframework.stereotype.Service;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import java.util.HashMap;
+import java.util.List;
 
 /**
- * @Package: com.justplay1994.github.db2es.config
- * @Project: db2es
- * @Description:   //TODO
+ * @Package: com.justplay1994.github.oracle2es.core.service
+ * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/9/19 19:34
+ * @Create_Date: 2018/11/10 19:14
  * @Updater: huangzezhou
- * @Update_Date: 2018/9/19 19:34
+ * @Update_Date: 2018/11/10 19:14
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-@Component
-@ConfigurationProperties(prefix = "oracle2es")
-@Data
-public class Oracle2esConfig {
+@Service
+public class EsOperateByTableServiceImpl extends TableModel{
 
-    String latColumn;
-    String lonColumn;
-    String esUrl;
-    String maxThreadCount;
-    String indexType;
-    String indexDb;
-    String owner;
-    String[] justReadTB;
-    String[] skipReadTB;
+    /**
+     * 创建该表的mapping映射
+     */
+    public void createMapping(){
+
+    }
+
+    /**
+     * 解析数据，产生bulk语句（es批量插入语句）,每一个String对象，就是一条数据插入的bulk语句。
+     * 产生了该语句，并不需要立即执行，而是累积到一定数量在执行。
+     * @param rows
+     * @return
+     */
+    private List<String> generatorBulk(List<HashMap> rows){
+        return null;
+    }
+
 
 
 }
