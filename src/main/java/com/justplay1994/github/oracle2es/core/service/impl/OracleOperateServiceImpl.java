@@ -26,9 +26,7 @@ package com.justplay1994.github.oracle2es.core.service.impl;
 
 import com.justplay1994.github.oracle2es.core.config.Oracle2esConfig;
 import com.justplay1994.github.oracle2es.core.dao.TableMapper;
-import com.justplay1994.github.oracle2es.core.service.OracleOperateService;
 import com.justplay1994.github.oracle2es.core.service.model.ColumnModel;
-import com.justplay1994.github.oracle2es.core.service.model.DatabaseModel;
 import com.justplay1994.github.oracle2es.core.service.model.PageModel;
 import com.justplay1994.github.oracle2es.core.service.model.TableModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,7 @@ import java.util.List;
  * @Description: //TODO
  **/
 @Service
-public class OracleOperateServiceImpl implements OracleOperateService {
+public class OracleOperateServiceImpl{
 
     @Autowired
     TableMapper tableMapper;
@@ -57,7 +55,7 @@ public class OracleOperateServiceImpl implements OracleOperateService {
     @Autowired
     Oracle2esConfig config;
 
-    @Override
+    //TODO 还需要添加查询每张表的数据行数，以及所有表总行数计算的逻辑，并保存到静态变量中。totalNumber
     public HashMap<String, TableModel> queryAllTableStructure() {
         HashMap<String, TableModel> result = new HashMap<String, TableModel>();
         HashMap temp = new HashMap(){{
@@ -87,12 +85,12 @@ public class OracleOperateServiceImpl implements OracleOperateService {
         return result;
     }
 
-    @Override
+    //TODO 分页查询数据并返回结果
     public List<HashMap> queryTableByPage(String tbName, PageModel pageModel) {
         return null;
     }
 
-    @Override
+
     public boolean isSkip(String tbName) {
         String[] skipReadTB = config.getSkipReadTB();
         String[] justReadTB = config.getJustReadTB();

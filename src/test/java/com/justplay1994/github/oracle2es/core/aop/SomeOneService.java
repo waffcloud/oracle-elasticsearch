@@ -27,6 +27,9 @@ package com.justplay1994.github.oracle2es.core.aop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @Package: com.justplay1994.github.oracle2es.core.aop
  * @Project: oracle-elasticsearch
@@ -45,7 +48,7 @@ public class SomeOneService {
 
     String str;
 
-    public void print(){
+    public void print(List<HashMap> list){
         someOneService.setStr("123");
         String str = someOneService.getStr();
         System.out.println(str);

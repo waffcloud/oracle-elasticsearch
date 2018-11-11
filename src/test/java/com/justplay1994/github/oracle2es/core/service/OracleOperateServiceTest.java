@@ -24,6 +24,7 @@
 
 package com.justplay1994.github.oracle2es.core.service;
 
+import com.justplay1994.github.oracle2es.core.service.impl.OracleOperateServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class OracleOperateServiceTest {
 
     @Autowired
-    OracleOperateService oracleOperateService;
+    OracleOperateServiceImpl oracleOperateService;
 
     @Test
     public void queryAllTableStructureTest(){

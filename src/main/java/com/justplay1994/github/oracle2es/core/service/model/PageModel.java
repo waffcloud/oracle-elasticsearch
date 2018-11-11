@@ -42,6 +42,11 @@ public class PageModel {
     private int pageNum;    //页码号,从1开始
     private int pageSize;   //页大小
 
+    public PageModel(int pageNum, int pageSize){
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+    }
+
     /**
      * 获取开始下标，从1开始
      * @return

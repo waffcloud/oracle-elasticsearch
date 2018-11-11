@@ -47,7 +47,12 @@ public class Oracle2esConfig {
     String latColumn;
     String lonColumn;
     String esUrl;
-    String maxThreadCount;
+    int maxCreateMapping;
+    int maxTable;
+    int maxQueryByPagePerTable;
+    int maxBulkGenerator;
+    int maxInputData;
+    int pageSize;
     String indexType;
     String indexDb;
     String owner;

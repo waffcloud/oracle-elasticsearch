@@ -24,7 +24,9 @@
 
 package com.justplay1994.github.oracle2es.core.service.model;
 
+import com.justplay1994.github.oracle2es.core.config.Oracle2esConfig;
 import com.justplay1994.github.oracle2es.core.service.model.current.ProcessBar;
+import com.justplay1994.github.oracle2es.framework.utils.SpringContextUtils;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -47,4 +49,11 @@ public class TableModel {
     private List<ColumnModel> columnModels;   //表结构
     private LinkedBlockingQueue<List<HashMap>> rows;  //数据队列,每次分页查询的结果入队。
     private ProcessBar processBar;
+    private int totalNumber;
+
+    public TableModel(){
+        Oracle2esConfig config = SpringContextUtils.getBean(Oracle2esConfig.class);
+        columnModels = new ArrayList<ColumnModel>();
+        rows = new LinkedBlockingQueue<List<HashMap>>();
+    }
 }

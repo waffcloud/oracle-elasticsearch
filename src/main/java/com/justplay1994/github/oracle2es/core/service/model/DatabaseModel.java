@@ -43,8 +43,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @Update_Description: huangzezhou 补充
  * @Description: //TODO
  **/
-public class DatabaseModel {//数据库只有一个，所以所有变量都是静态。
-    public static HashMap<String, TableModel> tbs;
-    public static ProcessBar processBar;
-    public static LinkedBlockingQueue<String> bulks;   //es批量插入语句队列
+public class DatabaseModel {//数据库
+    public HashMap<String, TableModel> tbs;
+    public ProcessBar processBar;
+    public LinkedBlockingQueue<String> bulks;   //es批量插入语句队列,该语句直接执行，内部已包含索引信息。
+    private int totalNumber;    //TODO 查询总数，以及每张表总数的逻辑还没写
 }

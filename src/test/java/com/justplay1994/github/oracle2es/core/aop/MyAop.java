@@ -25,8 +25,13 @@
 package com.justplay1994.github.oracle2es.core.aop;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Package: com.justplay1994.github.oracle2es.core.aop
@@ -48,11 +53,32 @@ public class MyAop {
     @Before("pointCut()")
     public void before(JoinPoint joinPoint){
         System.out.println("before");
+        joinPoint.getArgs()[0] = new ArrayList<HashMap>(){{
+            add(new HashMap(){{
+                put("change","change");
+            }});
+        }};
+        List list = (List)joinPoint.getArgs()[0];
+        list.add(new HashMap(){{
+            put("add","add");
+        }});
+
     }
 
     @AfterReturning(returning = "ret", pointcut = "pointCut()")
     public void after(Object ret){
         System.out.println("after");
+    }
+
+    @Around("execution(* com.justplay1994.github.oracle2es.core.aop.*.*(..))")
+    public void around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        Object[] args = proceedingJoinPoint.getArgs();
+        args[0]= new ArrayList<HashMap>(){{
+            add(new HashMap(){{
+                put("change","change");
+            }});
+        }};
+        proceedingJoinPoint.proceed(args);
     }
 
 }

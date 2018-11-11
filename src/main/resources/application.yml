@@ -1,11 +1,16 @@
 
 #################################### 用户配置 开始#################################
-#
+#维度字段名
 oracle2es.latColumn: WD84
+#经度字段名
 oracle2es.lonColumn: JD84
 
 oracle2es.esUrl: http://10.192.19.161:9200/
-oracle2es.maxThreadCount: 8
+
+#每一页请求数据量（行）
+oracle2es.pageSize: 1000
+#每张表的数据队列大小。该队列存储的单元是一页数据，容量能存储总数据量大小为 pageSize * queueSize
+oracle2es.queueSize: 100
 #统一索引类型
 oracle2es.indexType: _doc
 #统一索引DB名称，索引名为:tableName@dbName
@@ -16,6 +21,19 @@ oracle2es.owner: ZHFTYJJCPT
 oracle2es.justReadTB: XIAOFANG_YINHUAN,BJ0201,BJ0203
 #需要跳过的库的列表，为空则不跳过。先判断只读，在判断是否跳过。当两个配置冲突时，参考只读，优先级更高。
 oracle2es.skipReadTB: BJ0201
+
+##### 性能配置 #####
+
+# 创建mapping的最大线程数
+oracle2es.maxCreateMapping: 8
+#同时请求数据的表个数的最大值。
+oracle2es.maxTable: 2
+#一张表会最多同时启动N个生产者，每个创建的生产者只查询一页数据后销毁。
+oracle2es.maxQueryByPagePerTable: 4
+#最大消Bulk加工的数量。每个消费者会去遍历所有的表，将数据出队加工成bulk语句并入队。
+oracle2es.maxBulkGenerator: 8
+#导入es的最大线程数量
+oracle2es.maxInputData: 8
 
 #################################### 用户配置 结束 ##########################################
 

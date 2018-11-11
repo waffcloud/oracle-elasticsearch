@@ -30,6 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @Package: com.justplay1994.github.oracle2es.core.aop
  * @Project: oracle-elasticsearch
@@ -49,6 +53,10 @@ public class AopTest {
 
     @Test
     public void aopTest(){
-        someOneService.print();
+        List<HashMap> list = new ArrayList<HashMap>();
+        list.add(new HashMap(){{
+            put("key", "value");
+        }});
+        someOneService.print(list);
     }
 }
