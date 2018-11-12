@@ -32,12 +32,11 @@
         SELECT * FROM ${tbName}
     </select>
 
-  <select id="queryTableByColumn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-      SELECT
-      <foreach collection="map.cols" item="item" separator=",">
-        ${item}
-      </foreach>
-    FROM ${map.tbName}
-    WHERE OWNER = #{map.OWNER}
-  </select>
+    <select id="queryAllTableStructure" resultType="java.util.HashMap">
+    SELECT a.OWNER, a.TABLE_NAME, a.COLUMN_NAME, a.DATA_TYPE, b.num_rows FROM all_tab_columns a, user_tables b where a.table_name = b. table_name
+    </select>
+
+    <select id="queryTableByPage" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT * FROM (SELECT ROWID row_id, ROWNUM row_num, t.* FROM ${tbName} t where rownum &lt; #{pageModel.pageNum}*#{pageModel.pageSize}) WHERE row_num &gt;= (#{pageModel.pageNum}-1)*#{pageModel.pageSize}
+    </select>
 </mapper>

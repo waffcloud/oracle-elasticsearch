@@ -11,6 +11,8 @@ import com.justplay1994.github.oracle2es.core.service.model.mapping.MappingModel
 import com.justplay1994.github.oracle2es.core.service.model.mapping.PropertiesModel;
 import com.justplay1994.github.oracle2es.framework.utils.HttpClientUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +31,15 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class EsOperateServiceImpl {
 
+    private static final Logger logger = LoggerFactory.getLogger(EsOperateServiceImpl.class);
+
     @Autowired
     Oracle2esConfig config;
 
+    //索引必须是小写，否则es报错
     public String indexName(String tbName) {
         String dbName = StringUtils.isEmpty(config.getIndexDb()) ? config.getOwner() : config.getIndexDb();
-        return tbName + "@" + dbName.toLowerCase();
+        return (tbName + "@" + dbName).toLowerCase();
     }
 
     /**
@@ -42,7 +47,7 @@ public class EsOperateServiceImpl {
      *
      * @param databaseModel
      */
-    public void createMapping(DatabaseModel databaseModel) {
+    public void createMapping(DatabaseModel databaseModel) throws InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
         ThreadPoolExecutor executor = new ThreadPoolExecutor(config.getMaxCreateMapping(),
                 config.getMaxCreateMapping(), 100, TimeUnit.MILLISECONDS,
@@ -65,7 +70,7 @@ public class EsOperateServiceImpl {
                         try {
                             HttpClientUtil.put(url, params);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            logger.error("create mapping error",e);
                         }
                     }
                 });
@@ -74,17 +79,17 @@ public class EsOperateServiceImpl {
             }
         }
         while (executor.getActiveCount() != 0){
-            System.out.println("create mapping: "+executor.getCompletedTaskCount()+"/"+executor.getTaskCount());
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
+            logger.info("delete mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+            Thread.sleep(1000);
         }
+        double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
+        logger.info("delete mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
         executor.shutdown();
+        logger.info("create mapping finished!");
     }
 
-    //TODO
+    //
     public List<String> generatorBulk(String tbName, List<HashMap> pageData) {
         for (HashMap row: pageData){
 
@@ -92,4 +97,35 @@ public class EsOperateServiceImpl {
         return null;
     }
 
+
+    public void deleteAllConflict(DatabaseModel databaseModel) throws InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(config.getMaxCreateMapping(),
+                config.getMaxCreateMapping(), 100, TimeUnit.MILLISECONDS,
+                new LinkedBlockingDeque<Runnable>());
+        for (final String tbName : databaseModel.tbs.keySet()) {    //遍历表
+            final String url = config.getEsUrl() + indexName(tbName);
+            logger.info("delete index : "+indexName(tbName));
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        HttpClientUtil.delete(url);
+                    } catch (IOException e) {
+                        logger.error("delete mapping error: "+ indexName(tbName), e);
+                    }
+                }
+            });
+        }
+        while (executor.getActiveCount() != 0){
+            double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
+            logger.info("delete mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+            Thread.sleep(1000);
+        }
+        double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
+        logger.info("delete mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+        executor.shutdown();
+        logger.info("delete mapping finished!");
+        Thread.sleep(1000);
+    }
 }

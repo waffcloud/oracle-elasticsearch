@@ -5,6 +5,7 @@ import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
@@ -19,6 +20,8 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +36,8 @@ import java.util.Map;
  */
 
 public class HttpClientUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
     static PoolingHttpClientConnectionManager cm;
     static CloseableHttpClient httpClient;
@@ -57,12 +62,15 @@ public class HttpClientUtil {
         String result = "";
 
         HttpPut httpPut = new HttpPut(url);
+
+        httpPut.setHeader("Content-Type", "application/json;charset=UTF-8");
         httpPut.setEntity(new StringEntity(params));
         HttpResponse response = httpClient.execute(httpPut);
         StatusLine status = response.getStatusLine();                   //获取返回的状态码
         HttpEntity entity = response.getEntity();                       //获取响应内容
-        if (status.getStatusCode() == HttpStatus.SC_OK) {
-            result = EntityUtils.toString(entity, "UTF-8");
+        result = EntityUtils.toString(entity, "UTF-8");
+        if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
+            logger.error("put request error:\n"+result);
         }
         httpPut.abort();//中止请求，连接被释放回连接池
         return result;
@@ -70,7 +78,6 @@ public class HttpClientUtil {
 
     public static String put(String url, Map<String, String> paramMap) throws IOException {
         String result = "";
-
 
         HttpPut httpPut = new HttpPut(url);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -83,8 +90,9 @@ public class HttpClientUtil {
         HttpResponse response = httpClient.execute(httpPut);
         StatusLine status = response.getStatusLine();                   //获取返回的状态码
         HttpEntity entity = response.getEntity();                       //获取响应内容
-        if (status.getStatusCode() == HttpStatus.SC_OK) {
-            result = EntityUtils.toString(entity, "UTF-8");
+        result = EntityUtils.toString(entity, "UTF-8");
+        if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
+            logger.error("put request error:\n"+result);
         }
         httpPut.abort();//中止请求，连接被释放回连接池
         return result;
@@ -108,10 +116,27 @@ public class HttpClientUtil {
         HttpResponse response = httpClient.execute(httpGet);
         StatusLine status = response.getStatusLine();                   //获取返回的状态码
         HttpEntity entity = response.getEntity();                       //获取响应内容
-        if (status.getStatusCode() == HttpStatus.SC_OK) {
-            result = EntityUtils.toString(entity, "UTF-8");
+        result = EntityUtils.toString(entity, "UTF-8");
+        if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
+            logger.error("put request error:\n"+result);
         }
         httpGet.abort();//中止请求，连接被释放回连接池
+        return result;
+    }
+
+    public static String delete(String url) throws IOException {
+        String result = "";
+
+        HttpDelete httpDelete = new HttpDelete(url);
+        httpDelete.setHeader("Content-Type", "application/json;charset=UTF-8");
+        HttpResponse response = httpClient.execute(httpDelete);
+        StatusLine status = response.getStatusLine();                   //获取返回的状态码
+        HttpEntity entity = response.getEntity();                       //获取响应内容
+        result = EntityUtils.toString(entity, "UTF-8");
+        if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
+            logger.error("put request error:\n"+result);
+        }
+        httpDelete.abort();//中止请求，连接被释放回连接池
         return result;
     }
 }

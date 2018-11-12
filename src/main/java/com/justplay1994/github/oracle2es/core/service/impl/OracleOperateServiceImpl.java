@@ -32,6 +32,7 @@ import com.justplay1994.github.oracle2es.core.service.model.TableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,28 +56,21 @@ public class OracleOperateServiceImpl{
     @Autowired
     Oracle2esConfig config;
 
-    //TODO 还需要添加查询每张表的数据行数，以及所有表总行数计算的逻辑，并保存到静态变量中。totalNumber
+    //查询表结构，以及表的记录总数
     public HashMap<String, TableModel> queryAllTableStructure() {
         HashMap<String, TableModel> result = new HashMap<String, TableModel>();
-        HashMap temp = new HashMap(){{
-            put("tbName", "all_tab_columns");
-            put("OWNER", config.getOwner());
-            put("cols", new ArrayList<String>(){{
-                add("TABLE_NAME");
-                add("COLUMN_NAME");
-                add("DATA_TYPE");
-            }});
-        }};
-        List<HashMap> structures = tableMapper.queryTableByColumn(temp);
+        List<HashMap> structures = tableMapper.queryAllTableStructure();
         for (HashMap map: structures){
             String tbName = String.valueOf(map.get("TABLE_NAME"));
             String colName = String.valueOf(map.get("COLUMN_NAME"));
             String colType = String.valueOf(map.get("DATA_TYPE"));
+            BigDecimal num_rows = (BigDecimal) map.get("NUM_ROWS");
             if (isSkip(tbName)) continue;
             ColumnModel columnModel = new ColumnModel(colName, colType);
-            if (result.get(tbName) == null) {
+            if (result.get(tbName) == null) {   //一张新表
                 TableModel tableModel = new TableModel();
                 tableModel.getColumnModels().add(columnModel);
+                tableModel.setTotalNumber(num_rows.intValue());
                 result.put(tbName, tableModel);
             }else {
                 result.get(tbName).getColumnModels().add(columnModel);
@@ -85,9 +79,9 @@ public class OracleOperateServiceImpl{
         return result;
     }
 
-    //TODO 分页查询数据并返回结果
+    //
     public List<HashMap> queryTableByPage(String tbName, PageModel pageModel) {
-        return null;
+        return tableMapper.queryTableByPage(tbName, pageModel);
     }
 
 

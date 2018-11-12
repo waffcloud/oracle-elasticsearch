@@ -24,6 +24,7 @@
 
 package com.justplay1994.github.oracle2es.core.dao;
 
+import com.justplay1994.github.oracle2es.core.service.model.PageModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -55,4 +56,8 @@ public interface TableMapper {
      * @return
      */
     List<HashMap> queryTableByColumn(@Param("map")HashMap map);
+
+    List<HashMap> queryAllTableStructure();
+
+    List<HashMap> queryTableByPage(@Param("tbName")String tbName, @Param("pageModel")PageModel pageModel);
 }

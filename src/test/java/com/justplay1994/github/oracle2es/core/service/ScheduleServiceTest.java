@@ -22,61 +22,35 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.dao;
+package com.justplay1994.github.oracle2es.core.service;
 
-import com.justplay1994.github.oracle2es.Oracle2esApplication;
-import com.justplay1994.github.oracle2es.core.service.model.PageModel;
+import com.justplay1994.github.oracle2es.core.service.impl.ScheduleServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 /**
- * @Package: com.justplay1994.github.oracle2es.core.dao
+ * @Package: com.justplay1994.github.oracle2es.core.service
  * @Project: oracle-elasticsearch
- * @Description: //TODO
  * @Creator: huangzezhou
- * @Create_Date: 2018/11/10 13:56
+ * @Create_Date: 2018/11/12 10:14
  * @Updater: huangzezhou
- * @Update_Date: 2018/11/10 13:56
+ * @Update_Date: 2018/11/12 10:14
  * @Update_Description: huangzezhou 补充
+ * @Description: //TODO
  **/
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TableMapperTest {
+public class ScheduleServiceTest {
 
     @Autowired
-    TableMapper tableMapper;
+    ScheduleServiceImpl scheduleService;
 
     @Test
-    public void queryTableTest(){
-        List<HashMap> tables = tableMapper.queryTable("AUTH_ROLES");
-        HashMap map = new HashMap(){{
-            put("tbName", "all_tab_columns");
-            put("OWNER", "ZHFTYJJCPT");
-            put("cols", new ArrayList<String>(){{
-                add("OWNER");
-                add("TABLE_NAME");
-                add("COLUMN_NAME");
-                add("DATA_TYPE");
-            }});
-        }};
-        List<HashMap> tables1 = tableMapper.queryTableByColumn(map);
-        System.out.println();
-    }
-
-    @Test
-    public void queryTableByPage(){
-        PageModel pageModel = new PageModel(2,5);
-        List<HashMap> result = tableMapper.queryTableByPage("auth_permissions",pageModel);
-        System.out.println();
+    public void test() throws InterruptedException {
+        scheduleService.schedule();
     }
 
 }
