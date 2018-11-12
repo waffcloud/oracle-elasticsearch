@@ -7,6 +7,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.routing.HttpRoute;
@@ -49,7 +50,7 @@ public class HttpClientUtil {
         // 将每个路由基础的连接增加到20
         cm.setDefaultMaxPerRoute(20);
         //将目标主机的最大连接数增加到50
-        HttpHost localhost = new HttpHost("www.yeetrack.com", 80);
+        HttpHost localhost = new HttpHost("10.192.19.161", 80);
         cm.setMaxPerRoute(new HttpRoute(localhost), 50);
 
         httpClient = HttpClients.custom()
@@ -76,27 +77,45 @@ public class HttpClientUtil {
         return result;
     }
 
-    public static String put(String url, Map<String, String> paramMap) throws IOException {
+    public static String post(String url, String params) throws IOException {
         String result = "";
 
-        HttpPut httpPut = new HttpPut(url);
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        if (!MapUtils.isEmpty(paramMap)){
-            for (String key: paramMap.keySet()){
-                params.add(new BasicNameValuePair(key,paramMap.get(key)));
-            }
-        }
-        httpPut.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        HttpResponse response = httpClient.execute(httpPut);
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
+        httpPost.setEntity(new StringEntity(params));
+        HttpResponse response = httpClient.execute(httpPost);
         StatusLine status = response.getStatusLine();                   //获取返回的状态码
         HttpEntity entity = response.getEntity();                       //获取响应内容
         result = EntityUtils.toString(entity, "UTF-8");
         if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
-            logger.error("put request error:\n"+result);
+            logger.error("post request error:\n"+result);
         }
-        httpPut.abort();//中止请求，连接被释放回连接池
+        httpPost.abort();//中止请求，连接被释放回连接池
         return result;
     }
+
+//    public static String put(String url, Map<String, String> paramMap) throws IOException {
+//        String result = "";
+//
+//        HttpPut httpPut = new HttpPut(url);
+//        List<NameValuePair> params = new ArrayList<NameValuePair>();
+//        if (!MapUtils.isEmpty(paramMap)){
+//            for (String key: paramMap.keySet()){
+//                params.add(new BasicNameValuePair(key,paramMap.get(key)));
+//            }
+//        }
+//        httpPut.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+//        HttpResponse response = httpClient.execute(httpPut);
+//        StatusLine status = response.getStatusLine();                   //获取返回的状态码
+//        HttpEntity entity = response.getEntity();                       //获取响应内容
+//        result = EntityUtils.toString(entity, "UTF-8");
+//        if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
+//            logger.error("put request error:\n"+result);
+//        }
+//        httpPut.abort();//中止请求，连接被释放回连接池
+//        return result;
+//    }
 
     public static String get(String url, Map<String, String> paramMap) throws IOException, URISyntaxException {
         String result = "";
@@ -134,7 +153,7 @@ public class HttpClientUtil {
         HttpEntity entity = response.getEntity();                       //获取响应内容
         result = EntityUtils.toString(entity, "UTF-8");
         if (! (status.getStatusCode() == HttpStatus.SC_OK) ) {
-            logger.error("put request error:\n"+result);
+            logger.error("delete request error:\n"+result);
         }
         httpDelete.abort();//中止请求，连接被释放回连接池
         return result;

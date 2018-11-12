@@ -68,9 +68,7 @@ public class OracleOperateServiceImpl{
             if (isSkip(tbName)) continue;
             ColumnModel columnModel = new ColumnModel(colName, colType);
             if (result.get(tbName) == null) {   //一张新表
-                TableModel tableModel = new TableModel();
-                tableModel.getColumnModels().add(columnModel);
-                tableModel.setTotalNumber(num_rows.intValue());
+                TableModel tableModel = new TableModel(columnModel, num_rows.intValue());
                 result.put(tbName, tableModel);
             }else {
                 result.get(tbName).getColumnModels().add(columnModel);

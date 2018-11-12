@@ -22,55 +22,55 @@
  * SOFTWARE.
  */
 
-package com.justplay1994.github.oracle2es.core.service.model;
+package com.justplay1994.github.oracle2es.core.service.model.mapping;
 
-import com.justplay1994.github.oracle2es.core.service.model.current.ProcessBar;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * @Package: com.justplay1994.github.oracle2es.core.service.model
+ * @Package: com.justplay1994.github.oracle2es.core.service
  * @Project: oracle-elasticsearch
  * @Creator: huangzezhou
- * @Create_Date: 2018/11/10 17:08
+ * @Create_Date: 2018/11/12 10:59
  * @Updater: huangzezhou
- * @Update_Date: 2018/11/10 17:08
+ * @Update_Date: 2018/11/12 10:59
  * @Update_Description: huangzezhou 补充
  * @Description: //TODO
  **/
-public class DatabaseModel {//数据库
+public class OracleEsTypeMappingModel {
+    public static HashMap map = new HashMap();
 
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseModel.class);
-
-    public HashMap<String, TableModel> tbs;
-    public ProcessBar processBar;
-    public LinkedBlockingQueue<String> bulks;   //es批量插入语句队列,该语句直接执行，内部已包含索引信息。
-
-    public boolean isQueryDataFinished(){
-        for (String key: tbs.keySet()){
-            TableModel tableModel = tbs.get(key);
-            if (!tableModel.isQueryDataFinished()){
-                return false;
-            }
-        }
-        return true;
+    static {
+        //oracle java es
+        //VARCHAR2 String
+        //NUMBER BigDecimal
+        //DATE Timestamp
+        map.put("VARCHAR2", new IkTypeModel());
+        map.put("NUMBER", new IntegerModel());
+        map.put("DATE", new DateTypeModel());
     }
 
-    public boolean isBulkGeneratorFinished(){
-        for (String key: tbs.keySet()){
-            TableModel tableModel = tbs.get(key);
-            if (!tableModel.isBulkGeneratorFinished()){
-                return false;
-            }
-        }
-        return true;
+    @Data
+    public static class IntegerModel {
+        String type = "integer";
     }
 
+    @Data
+    public static class IkTypeModel {
+        String type = "text";
+        String analyzer = "ik_max_word";
+        String search_analyzer = "ik_max_word";
+    }
+
+    @Data
+    public static class DateTypeModel {
+        String type = "date";
+        String format = "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis";
+    }
+
+    @Data
+    public class LocationTypeModel {
+        String type = "geo_point";
+    }
 }

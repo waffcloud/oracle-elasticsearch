@@ -1,5 +1,6 @@
 package com.justplay1994.github.oracle2es.core.service.model.current;
 
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +17,17 @@ import org.slf4j.LoggerFactory;
 public class ProcessBar {
     private static final Logger logger = LoggerFactory.getLogger(ProcessBar.class);
 
-    private int totalNumber = 0;    //总数据量
-    private int finishedNumber = 0; //已完成数据量
+    private int totalNumber;    //总数据量
+    private int finishedNumber = 0; //已完成数据量，包含已失败的数量
+    private int failedNumber = 0; //已失败的数量。
+
+    public ProcessBar(int totalNumber){
+        this.totalNumber = totalNumber;
+    }
+
+    public int getFinishedNumber(){
+        return finishedNumber;
+    }
 
     synchronized public void addTotalNumber(int addNumber){
         totalNumber += addNumber;
@@ -27,15 +37,12 @@ public class ProcessBar {
         finishedNumber += addNumber;
     }
 
-    public String printNumber(){
-        return "(totalNumber="+totalNumber+", finishedNumber="+finishedNumber+")";
-    }
-    public String printPercent(){
-        double percent = finishedNumber * 1.0 / totalNumber;
-        return "(Has finished " + percent+")";
-    }
+    synchronized public void addFailedNumber(int addNumber){failedNumber += addNumber;}
 
-    public String printAll(){
-        return printNumber()+printPercent();
+    public String print(){
+        double finishedPercent = finishedNumber * 1.0 / totalNumber * 100;
+        double failedPercent = failedNumber * 1.0 / finishedPercent * 100;
+        return "finished : "+finishedPercent +"%("+failedPercent+"% failed) "+
+                "[total: "+totalNumber+", finished: "+finishedNumber+", failed: "+ failedNumber+"]";
     }
 }

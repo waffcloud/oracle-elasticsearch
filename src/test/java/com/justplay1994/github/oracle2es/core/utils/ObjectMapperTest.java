@@ -35,15 +35,14 @@ public class ObjectMapperTest {
 
     @Test
     public void createMapping() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        PropertiesModel propertiesModel = new PropertiesModel();
-        propertiesModel.add("location", new LocationTypeModel());
-        propertiesModel.add("column1", new IkTypeModel());
-        propertiesModel.add("column2", new DateTypeModel());
-        propertiesModel.add("column3", new TextTypeModel());
-        MappingModel mappingModel = new MappingModel(propertiesModel);
-        String result = mapper.writeValueAsString(mappingModel);
-        System.out.println(result);
+//        ObjectMapper mapper = new ObjectMapper();
+//        PropertiesModel propertiesModel = new PropertiesModel();
+//        propertiesModel.add("location", new LocationTypeModel());
+//        propertiesModel.add("column2", new DateTypeModel());
+//        propertiesModel.add("column3", new TextTypeModel());
+//        MappingModel mappingModel = new MappingModel(propertiesModel);
+//        String result = mapper.writeValueAsString(mappingModel);
+//        System.out.println(result);
     }
 
 }

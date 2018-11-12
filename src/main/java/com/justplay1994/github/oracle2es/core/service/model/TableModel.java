@@ -50,10 +50,17 @@ public class TableModel {
     private LinkedBlockingQueue<List<HashMap>> rows;  //数据队列,每次分页查询的结果入队。
     private ProcessBar processBar;
     private int totalNumber;
+    private boolean bulkGeneratorFinished;
 
-    public TableModel(){
-        Oracle2esConfig config = SpringContextUtils.getBean(Oracle2esConfig.class);
+    public TableModel(ColumnModel columnModel, int totalNumber){
         columnModels = new ArrayList<ColumnModel>();
         rows = new LinkedBlockingQueue<List<HashMap>>();
+        this.totalNumber = totalNumber;
+        columnModels.add(columnModel);
+        processBar = new ProcessBar(totalNumber);
+    }
+
+    public boolean isQueryDataFinished(){
+        return processBar.getFinishedNumber() == totalNumber;
     }
 }

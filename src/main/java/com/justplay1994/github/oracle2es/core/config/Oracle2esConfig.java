@@ -58,6 +58,7 @@ public class Oracle2esConfig {
     String owner;
     String[] justReadTB;
     String[] skipReadTB;
+    int bulkSize;
 
 
 }

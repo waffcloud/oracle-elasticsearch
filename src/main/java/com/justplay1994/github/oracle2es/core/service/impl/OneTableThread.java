@@ -38,16 +38,27 @@ public class OneTableThread implements Runnable {
     @Override
     public void run() {
         Oracle2esConfig config = SpringContextUtils.getBean(Oracle2esConfig.class);
-
         ThreadPoolExecutor producer = new ThreadPoolExecutor(config.getMaxQueryByPagePerTable(),config.getMaxQueryByPagePerTable(),100, TimeUnit.MILLISECONDS,
                 new LinkedBlockingDeque<Runnable>());
-        for (int i = 1; i <=tableModel.getTotalNumber(); i=i+config.getPageSize()){
+        int pageNum = 1;
+        while(true) {
+            int end = pageNum * config.getPageSize()-1;
             //启动翻页查询的线程，每一页请求一个查询线程。
-            PageModel pageModel = new PageModel(i, config.getPageSize());
-            producer.execute(new QueryTableByPageThread(tbName,pageModel,queue));
+            if (end >= tableModel.getTotalNumber()) {//是否是最后一页
+                PageModel pageModel = new PageModel(pageNum, config.getPageSize());
+                tableModel.getProcessBar().addFinishedNumber(config.getPageSize() - (end - tableModel.getTotalNumber())-1);//进度条增加最后一页
+                producer.execute(new QueryTableByPageThread(tbName, pageModel, queue));
+                logger.info(tbName+":"+tableModel.getProcessBar().print()); //打印进度条
+                break;
+            }else {
+                PageModel pageModel = new PageModel(pageNum, config.getPageSize());
+                tableModel.getProcessBar().addFinishedNumber(config.getPageSize()); //进度条
+                producer.execute(new QueryTableByPageThread(tbName, pageModel, queue));
+                logger.info(tbName + ":" + tableModel.getProcessBar().print()); //打印进度条
+            }
         }
         while (producer.getActiveCount() != 0){
-            logger.info("query "+tbName+" finished="+producer.getCompletedTaskCount()*1.0/producer.getTaskCount());
+            logger.info("query " + tbName + " finished=" + producer.getCompletedTaskCount() * 1.0 / producer.getTaskCount()*100 +"%");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -55,8 +66,5 @@ public class OneTableThread implements Runnable {
             }
         }
         producer.shutdown();
-
-
     }
-
 }
