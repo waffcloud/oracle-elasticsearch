@@ -42,7 +42,7 @@ public class ProcessBar {
     public String print(){
         double finishedPercent = finishedNumber * 1.0 / totalNumber * 100;
         double failedPercent = failedNumber * 1.0 / finishedPercent * 100;
-        return "finished : "+finishedPercent +"%("+failedPercent+"% failed) "+
-                "[total: "+totalNumber+", finished: "+finishedNumber+", failed: "+ failedNumber+"]";
+        return "["+finishedPercent +"%("+failedPercent+"% failed) "+
+                ", total: "+totalNumber+", finished: "+finishedNumber+", failed: "+ failedNumber+"]";
     }
 }

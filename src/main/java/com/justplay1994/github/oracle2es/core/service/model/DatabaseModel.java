@@ -49,9 +49,10 @@ public class DatabaseModel {//数据库
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseModel.class);
 
-    public HashMap<String, TableModel> tbs;
-    public ProcessBar processBar;
-    public LinkedBlockingQueue<String> bulks;   //es批量插入语句队列,该语句直接执行，内部已包含索引信息。
+    public static HashMap<String, TableModel> tbs;
+    public static ProcessBar processBar = new ProcessBar(0);
+    public static ProcessBar inputDataProcessBar = new ProcessBar(0);
+    public static LinkedBlockingQueue<String> bulks;   //es批量插入语句队列,该语句直接执行，内部已包含索引信息。
 
     public boolean isQueryDataFinished(){
         for (String key: tbs.keySet()){

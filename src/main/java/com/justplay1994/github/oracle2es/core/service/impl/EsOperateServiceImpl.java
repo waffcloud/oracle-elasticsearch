@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -81,11 +82,11 @@ public class EsOperateServiceImpl {
         }
         while (executor.getActiveCount() != 0){
             double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
-            logger.info("create mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+            logger.info("create mapping: "+process+"% "+ executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
             Thread.sleep(1000);
         }
         double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
-        logger.info("create mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+        logger.info("create mapping: "+process+"% "+ executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
         executor.shutdown();
         logger.info("create mapping finished!");
     }
@@ -104,7 +105,7 @@ public class EsOperateServiceImpl {
             HashMap location = new HashMap();
             location.put("lat",row.get(config.getLatColumn()));
             location.put("lon",row.get(config.getLatColumn()));
-            row.put("location","location");
+            row.put("location",location);
             row.remove("ROW_ID");
             String body = objectMapper.writeValueAsString(row);
             String bulk = header+"\n"+body;
@@ -134,11 +135,11 @@ public class EsOperateServiceImpl {
         }
         while (executor.getActiveCount() != 0){
             double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
-            logger.info("delete mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+            logger.info("delete mapping: "+process+"% "+ executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
             Thread.sleep(1000);
         }
         double process = executor.getCompletedTaskCount()*1.0/executor.getTaskCount()*100;
-        logger.info("delete mapping: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount()+" "+process+"%");
+        logger.info("delete mapping: "+process+"% "+ executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
         executor.shutdown();
         logger.info("delete mapping finished!");
         Thread.sleep(1000);
@@ -146,6 +147,31 @@ public class EsOperateServiceImpl {
 
 
     public void inputData(String input) throws IOException {
-        HttpClientUtil.post(config.getEsUrl()+"_bulk", input);
+        printEsError(HttpClientUtil.post(config.getEsUrl() + "_bulk", input));
+    }
+
+    /*打印ES关键错误信息*/
+    public void printEsError(String result){
+        try {
+            ArrayList<LinkedHashMap> items = (ArrayList) objectMapper.readValue(result, HashMap.class).get("items");
+            for (LinkedHashMap item : items){
+                try {
+                    LinkedHashMap index = (LinkedHashMap) item.get("index");
+                    String _index = (String) index.get("_index");
+                    String _id = (String) index.get("_id");
+                    LinkedHashMap error = (LinkedHashMap) index.get("error");
+                    LinkedHashMap cause_by = (LinkedHashMap) error.get("caused_by");
+                    String reason = (String) cause_by.get("reason");
+                    logger.error("【index: " + _index + ","+error.get("reason")+",error: " + reason + ",id="+_id+"】");
+                    String tbName = _index.split("@")[0];
+//                    DatabaseModel.tbs.get(tbName).getProcessBar().addFailedNumber(1);
+                    DatabaseModel.processBar.addFailedNumber(1);
+                } catch (Exception e){
+                    //没有解析到error则跳过
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Json format error!\n",e);
+        }
     }
 }

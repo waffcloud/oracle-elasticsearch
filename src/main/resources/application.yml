@@ -20,9 +20,10 @@ oracle2es.bulkSize: 5
 
 oracle2es.owner: ZHFTYJJCPT
 #只读的表的列表，为空则读所有表。配置了只读（justRead）后，跳过（skip）逻辑失效。
-oracle2es.justReadTB: XIAOFANG_YINHUAN,BJ0201,BJ0203
+# oracle2es.justReadTB: XIAOFANG_YINHUAN,BJ0201,BJ0203
+oracle2es.justReadTB:
 #需要跳过的库的列表，为空则不跳过。先判断只读，在判断是否跳过。当两个配置冲突时，参考只读，优先级更高。
-oracle2es.skipReadTB: BJ0201
+oracle2es.skipReadTB:
 
 ##### 性能配置 #####
 
