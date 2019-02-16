@@ -1,6 +1,7 @@
 package com.justplay1994.github.oracle2es.core.service.impl;
 
 import com.justplay1994.github.oracle2es.core.config.Oracle2esConfig;
+import com.justplay1994.github.oracle2es.core.service.model.DatabaseModel;
 import com.justplay1994.github.oracle2es.core.service.model.PageModel;
 import com.justplay1994.github.oracle2es.core.service.model.TableModel;
 import com.justplay1994.github.oracle2es.framework.utils.SpringContextUtils;
@@ -47,18 +48,20 @@ public class OneTableThread implements Runnable {
             if (end >= tableModel.getTotalNumber()) {//是否是最后一页
                 PageModel pageModel = new PageModel(pageNum, config.getPageSize());
                 tableModel.getProcessBar().addFinishedNumber(config.getPageSize() - (end - tableModel.getTotalNumber())-1);//进度条增加最后一页
+                DatabaseModel.processBar.addFinishedNumber(config.getPageSize() - (end - tableModel.getTotalNumber())-1);
                 producer.execute(new QueryTableByPageThread(tbName, pageModel, queue));
-                logger.info(tbName+":"+tableModel.getProcessBar().print()); //打印进度条
+                logger.info("query data="+DatabaseModel.processBar.print()+" "+tbName + ":  " + tableModel.getProcessBar().print()); //打印进度条
                 break;
             }else {
                 PageModel pageModel = new PageModel(pageNum, config.getPageSize());
                 tableModel.getProcessBar().addFinishedNumber(config.getPageSize()); //进度条
                 producer.execute(new QueryTableByPageThread(tbName, pageModel, queue));
-                logger.info(tbName + ":" + tableModel.getProcessBar().print()); //打印进度条
+//                logger.info(tbName + ":  " + tableModel.getProcessBar().print()); //打印进度条
             }
         }
         while (producer.getActiveCount() != 0){
-            logger.info("query " + tbName + " finished=" + producer.getCompletedTaskCount() * 1.0 / producer.getTaskCount()*100 +"%");
+//            logger.info("query " + tbName + " finished=" + producer.getCompletedTaskCount() * 1.0 / producer.getTaskCount()*100 +"%");
+//            logger.info(tbName + ":  " + tableModel.getProcessBar().print()); //打印进度条
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

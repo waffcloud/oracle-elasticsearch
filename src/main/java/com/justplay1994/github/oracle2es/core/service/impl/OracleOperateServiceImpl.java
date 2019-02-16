@@ -27,8 +27,10 @@ package com.justplay1994.github.oracle2es.core.service.impl;
 import com.justplay1994.github.oracle2es.core.config.Oracle2esConfig;
 import com.justplay1994.github.oracle2es.core.dao.TableMapper;
 import com.justplay1994.github.oracle2es.core.service.model.ColumnModel;
+import com.justplay1994.github.oracle2es.core.service.model.DatabaseModel;
 import com.justplay1994.github.oracle2es.core.service.model.PageModel;
 import com.justplay1994.github.oracle2es.core.service.model.TableModel;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +70,9 @@ public class OracleOperateServiceImpl{
             if (isSkip(tbName)) continue;
             ColumnModel columnModel = new ColumnModel(colName, colType);
             if (result.get(tbName) == null) {   //一张新表
+                if (num_rows == null) num_rows = new BigDecimal(0);
                 TableModel tableModel = new TableModel(columnModel, num_rows.intValue());
+                DatabaseModel.processBar.addTotalNumber(num_rows.intValue());
                 result.put(tbName, tableModel);
             }else {
                 result.get(tbName).getColumnModels().add(columnModel);
@@ -87,7 +91,7 @@ public class OracleOperateServiceImpl{
         String[] skipReadTB = config.getSkipReadTB();
         String[] justReadTB = config.getJustReadTB();
 
-        if (justReadTB != null){//当只读配置不为空时，范围为只读表
+        if (!StringUtils.isAllEmpty(justReadTB)){//当只读配置不为空时，范围为只读表
             for (int i = 0; i < justReadTB.length; ++i){
                 if (justReadTB[i].equalsIgnoreCase(tbName)){    //在只需读的范围，则不跳过。
                     return false;
@@ -95,7 +99,7 @@ public class OracleOperateServiceImpl{
             }
             return true;    //不在只读范围，跳过
         } else {    //当只读配置为空时，则默认读全部表.
-            if (skipReadTB != null){
+            if (!StringUtils.isAllEmpty(skipReadTB)){
                 for (int i = 0; i < skipReadTB.length; ++i){
                     if (skipReadTB[i].equalsIgnoreCase(tbName)){
                         return true;

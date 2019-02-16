@@ -4,14 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.justplay1994.github.oracle2es.core.config.Oracle2esConfig;
 import com.justplay1994.github.oracle2es.core.service.model.DatabaseModel;
 import com.justplay1994.github.oracle2es.core.service.model.TableModel;
-import com.justplay1994.github.oracle2es.core.service.model.current.ProcessBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
@@ -59,6 +57,7 @@ public class ScheduleServiceImpl {
             Thread.sleep(100);
         }
         logger.info("Finished!");
+
     }
 
     class Producer implements Runnable {
@@ -69,11 +68,10 @@ public class ScheduleServiceImpl {
             for (String tbName : databaseModel.tbs.keySet()) {
                 TableModel tableModel = databaseModel.tbs.get(tbName);
                 executor.execute(new OneTableThread(tbName, tableModel, tableModel.getRows()));
-
             }
             while (executor.getActiveCount() != 0) {
                 double process = executor.getCompletedTaskCount() * 1.0 / executor.getTaskCount() * 100;
-                logger.info("query table finished=: " + process + "% " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
+//                logger.info("query table finished=: " + process + "% " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -98,7 +96,6 @@ public class ScheduleServiceImpl {
                 TableModel tableModel = databaseModel.tbs.get(tbName);
                 dbTotalNum += tableModel.getTotalNumber();
             }
-            databaseModel.processBar = new ProcessBar(dbTotalNum);
             //遍历所有的表，的所有数据队列
             while (true) {
                 if (databaseModel.isBulkGeneratorFinished()) break;
@@ -210,7 +207,7 @@ public class ScheduleServiceImpl {
                 }
             }
             double process = executor.getCompletedTaskCount() * 1.0 / executor.getTaskCount() * 100;
-            logger.info("input data finished=: " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount() + " " + process + "%");
+            logger.info("input data finished=: " + process + "% " + executor.getCompletedTaskCount() + "/" + executor.getTaskCount());
             executor.shutdown();
             logger.info("input data all finished!");
         }

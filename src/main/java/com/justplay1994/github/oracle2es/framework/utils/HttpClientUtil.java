@@ -65,7 +65,7 @@ public class HttpClientUtil {
         HttpPut httpPut = new HttpPut(url);
 
         httpPut.setHeader("Content-Type", "application/json;charset=UTF-8");
-        httpPut.setEntity(new StringEntity(params));
+        httpPut.setEntity(new StringEntity(params, "UTF-8"));
         HttpResponse response = httpClient.execute(httpPut);
         StatusLine status = response.getStatusLine();                   //获取返回的状态码
         HttpEntity entity = response.getEntity();                       //获取响应内容
@@ -83,7 +83,7 @@ public class HttpClientUtil {
         HttpPost httpPost = new HttpPost(url);
 
         httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
-        httpPost.setEntity(new StringEntity(params));
+        httpPost.setEntity(new StringEntity(params, "UTF-8"));
         HttpResponse response = httpClient.execute(httpPost);
         StatusLine status = response.getStatusLine();                   //获取返回的状态码
         HttpEntity entity = response.getEntity();                       //获取响应内容
